@@ -1,0 +1,22 @@
+.gradle
+build/
+classes/
+!gradle/wrapper/gradle-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+out/
+src/main/generated/
+src/main/resources/application.yml
+src/main/resources/application-prod.yml

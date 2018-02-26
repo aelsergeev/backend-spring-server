@@ -1,5 +1,6 @@
 package ru.server.spring.schedulers;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -19,6 +20,9 @@ public class AdminScheduler {
     private final SchedulersConfiguration schedulersConfiguration;
     private final AdminService adminService;
     private final UserService userService;
+
+    private String moderGroupHelpDeskCount;
+    private String domofondGroupHelpDeskCount;
 
     public AdminScheduler(SchedulersConfiguration schedulersConfiguration, AdminService adminService, UserService userService) {
         this.schedulersConfiguration = schedulersConfiguration;
@@ -48,4 +52,21 @@ public class AdminScheduler {
         }
     }
 
+    @Scheduled(cron = "${schedulers.hd-groups-stat.cron}")
+    private void updateGroupHelpDeskCount() {
+        if (schedulersConfiguration.getSchedulersProperties().getHdGroupsStat().getEnable()) {
+            Gson gson = new Gson();
+
+            this.moderGroupHelpDeskCount = gson.toJson(adminService.getGroupFilterHelpdeskCount(301));
+            this.domofondGroupHelpDeskCount = gson.toJson(adminService.getGroupFilterHelpdeskCount(301));
+        }
+    }
+
+    public String getModerGroupHelpDeskCount() {
+        return moderGroupHelpDeskCount;
+    }
+
+    public String getDomofondGroupHelpDeskCount() {
+        return domofondGroupHelpDeskCount;
+    }
 }

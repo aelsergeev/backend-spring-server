@@ -11,7 +11,7 @@ public class SchedulersProperties {
     private SchedulersSettings clearModStat = new SchedulersSettings();
     private SchedulersSettings taskLog = new SchedulersSettings();
     private SchedulersSettings adminUserId = new SchedulersSettings();
-    private SchedulersSettings consultation = new SchedulersSettings();
+    private SchedulersSettings hdGroupsStat = new SchedulersSettings();
 
     @Data
     public static class SchedulersSettings {

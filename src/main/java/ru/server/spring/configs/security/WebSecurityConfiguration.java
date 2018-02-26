@@ -27,11 +27,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.csrf().disable()
-                .antMatcher("/**")
                 .authorizeRequests()
+                .anyRequest().hasIpAddress("127.0.0.1")
+                .antMatchers("/webjars/**", "/swagger-resources/**", "/v2/api-docs").permitAll()
+                .antMatchers("/**").authenticated()
                 .antMatchers("/swagger-ui.html", "/auth/sessions").hasRole("ADMIN")
-                .antMatchers("/auth/principal").authenticated()
                 .and()
                 .formLogin()
                     .successHandler(new AjaxAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler()))

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import ru.server.spring.configs.properties.SchedulersProperties;
-import ru.server.spring.configs.properties.ServerCorsProperties;
 
 import java.util.logging.Logger;
 
@@ -13,7 +12,7 @@ import java.util.logging.Logger;
 public class SchedulersConfiguration {
 
     private final SchedulersProperties schedulersProperties;
-    private static final Logger logger = Logger.getLogger(ServerCorsProperties.class.getName());
+    private static final Logger logger = Logger.getLogger(SchedulersProperties.class.getName());
 
     @Autowired
     public SchedulersConfiguration(SchedulersProperties schedulersProperties) {

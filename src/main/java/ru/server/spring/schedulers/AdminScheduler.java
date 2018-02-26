@@ -58,7 +58,7 @@ public class AdminScheduler {
             Gson gson = new Gson();
 
             this.moderGroupHelpDeskCount = gson.toJson(adminService.getGroupFilterHelpdeskCount(301));
-            this.domofondGroupHelpDeskCount = gson.toJson(adminService.getGroupFilterHelpdeskCount(301));
+            this.domofondGroupHelpDeskCount = gson.toJson(adminService.getGroupFilterHelpdeskCount(302));
         }
     }
 

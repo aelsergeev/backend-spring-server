@@ -27,22 +27,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.csrf().disable()
-                .authorizeRequests()
-                .anyRequest().hasIpAddress("127.0.0.1")
+        http.authorizeRequests()
                 .antMatchers("/webjars/**", "/swagger-resources/**", "/v2/api-docs").permitAll()
                 .antMatchers("/**").authenticated()
-                .antMatchers("/swagger-ui.html", "/auth/sessions").hasRole("ADMIN")
-                .and()
-                .formLogin()
-                    .successHandler(new AjaxAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler()))
-                    .failureHandler(new AjaxAuthenticationFailureHandler())
-                .and()
-                .sessionManagement()
-                    .maximumSessions(1)
-                    .maxSessionsPreventsLogin(false)
-                    .sessionRegistry(sessionRegistry());
+                .antMatchers("/swagger-ui.html", "/auth/sessions").hasRole("ADMIN");
+
+        http.formLogin()
+                .successHandler(new AjaxAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler()))
+                .failureHandler(new AjaxAuthenticationFailureHandler());
+
+        http.sessionManagement()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                .sessionRegistry(sessionRegistry());
     }
 
     @Override

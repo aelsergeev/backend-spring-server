@@ -98,9 +98,9 @@ class AdminAuthorizationServiceImpl {
         }
     }
 
-    Connection.Response getResponse(String url) {
+    void getResponse(String url) {
         Connection connection = Jsoup.connect(domain + url);
-        return sendRequest(connection);
+        sendRequest(connection);
     }
 
     Document getDocument(String url) {

@@ -1,18 +1,12 @@
 package ru.server.spring.configs.properties;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@Data
 @ConfigurationProperties(prefix = "image.location")
 public class ImageProperties {
 
     private String employee;
-
-    public String getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(String employee) {
-        this.employee = employee;
-    }
 
 }

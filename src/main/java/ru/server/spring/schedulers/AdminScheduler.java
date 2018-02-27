@@ -7,12 +7,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.server.spring.configs.SchedulersConfiguration;
 import ru.server.spring.dao.CachedDao;
+import ru.server.spring.dao.HelpdeskQueueDao;
 import ru.server.spring.dao.HelpdeskGroupDao;
-import ru.server.spring.dao.HelpdeskGroupIdDao;
+import ru.server.spring.models.HelpdeskQueue;
 import ru.server.spring.models.HelpdeskGroup;
-import ru.server.spring.models.HelpdeskGroupId;
 import ru.server.spring.models.User;
-import ru.server.spring.models.api.HelpdeskGroupCount;
+import ru.server.spring.models.api.HelpdeskQueueCount;
 import ru.server.spring.services.AdminService;
 import ru.server.spring.services.UserService;
 
@@ -26,16 +26,16 @@ public class AdminScheduler {
     private final SchedulersConfiguration schedulersConfiguration;
     private final AdminService adminService;
     private final UserService userService;
+    private final HelpdeskQueueDao helpdeskQueueDao;
     private final HelpdeskGroupDao helpdeskGroupDao;
-    private final HelpdeskGroupIdDao helpdeskGroupIdDao;
     private final CachedDao cachedDao;
 
-    public AdminScheduler(SchedulersConfiguration schedulersConfiguration, AdminService adminService, UserService userService, HelpdeskGroupDao helpdeskGroupDao, HelpdeskGroupIdDao helpdeskGroupIdDao, CachedDao cachedDao) {
+    public AdminScheduler(SchedulersConfiguration schedulersConfiguration, AdminService adminService, UserService userService, HelpdeskQueueDao helpdeskQueueDao, HelpdeskGroupDao helpdeskGroupDao, CachedDao cachedDao) {
         this.schedulersConfiguration = schedulersConfiguration;
         this.adminService = adminService;
         this.userService = userService;
+        this.helpdeskQueueDao = helpdeskQueueDao;
         this.helpdeskGroupDao = helpdeskGroupDao;
-        this.helpdeskGroupIdDao = helpdeskGroupIdDao;
         this.cachedDao = cachedDao;
     }
 
@@ -64,21 +64,21 @@ public class AdminScheduler {
     @Scheduled(cron = "${schedulers.hd-groups-stat.cron}")
     private void updateGroupHelpDeskCount() {
         if (schedulersConfiguration.getSchedulersProperties().getHdGroupsStat().getEnable()) {
-            List<HelpdeskGroupCount> list = new ArrayList<>();
+            List<HelpdeskQueueCount> list = new ArrayList<>();
 
-            List<HelpdeskGroupId> helpdeskGroupIds = helpdeskGroupIdDao.findAll();
             List<HelpdeskGroup> helpdeskGroups = helpdeskGroupDao.findAll();
+            List<HelpdeskQueue> helpdeskQueues = helpdeskQueueDao.findAll();
 
-            for (HelpdeskGroupId helpdeskGroupId : helpdeskGroupIds) {
-                JsonArray hdQueues = adminService.getGroupFilterHelpdeskCount(helpdeskGroupId.getId());
+            for (HelpdeskGroup helpdeskGroup : helpdeskGroups) {
+                JsonArray hdQueues = adminService.getGroupFilterHelpdeskCount(helpdeskGroup.getId());
 
                 for (JsonElement hdQueue : hdQueues) {
                     int hdQueueId = hdQueue.getAsJsonObject().get("id").getAsInt();
                     int hdQueueCount = hdQueue.getAsJsonObject().get("count").getAsInt();
 
-                    for (HelpdeskGroup helpdeskGroup : helpdeskGroups)
-                        if (helpdeskGroup.getId() == hdQueueId)
-                            list.add(new HelpdeskGroupCount(helpdeskGroup, hdQueueCount));
+                    for (HelpdeskQueue helpdeskQueue : helpdeskQueues)
+                        if (helpdeskQueue.getId() == hdQueueId)
+                            list.add(new HelpdeskQueueCount(helpdeskQueue, hdQueueCount));
                 }
             }
 

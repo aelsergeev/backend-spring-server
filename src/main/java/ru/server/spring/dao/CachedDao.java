@@ -2,7 +2,7 @@ package ru.server.spring.dao;
 
 import lombok.Data;
 import org.springframework.stereotype.Repository;
-import ru.server.spring.models.api.HelpdeskGroupCount;
+import ru.server.spring.models.api.HelpdeskQueueCount;
 
 import java.util.List;
 
@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 public class CachedDao {
 
-    private List<HelpdeskGroupCount> groupHelpDeskCount;
+    private List<HelpdeskQueueCount> groupHelpDeskCount;
 
 }

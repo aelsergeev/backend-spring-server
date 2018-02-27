@@ -9,10 +9,11 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class HelpdeskGroupId {
+public class HelpdeskQueue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+    private String name;
 
 }

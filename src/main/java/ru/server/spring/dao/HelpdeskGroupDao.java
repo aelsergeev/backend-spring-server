@@ -9,3 +9,4 @@ public interface HelpdeskGroupDao extends CrudRepository<HelpdeskGroup, Long> {
     List<HelpdeskGroup> findAll();
 }
 
+

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.server.spring.dao.CachedDao;
-import ru.server.spring.models.api.HelpdeskGroupCount;
+import ru.server.spring.models.api.HelpdeskQueueCount;
 import ru.server.spring.models.api.WalletLog;
 import ru.server.spring.services.AdminService;
 
@@ -36,7 +36,7 @@ public class AdminController {
     }
 
     @PostMapping("/hd/group/count")
-    public List<HelpdeskGroupCount> hdGroupCount() {
+    public List<HelpdeskQueueCount> hdGroupCount() {
         return cachedDao.getGroupHelpDeskCount();
     }
 

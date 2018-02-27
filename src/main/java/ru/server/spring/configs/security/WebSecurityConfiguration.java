@@ -30,28 +30,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDao userDao;
     private final ServerCorsProperties serverCorsProperties;
-    private final ServerIpProperties serverIpProperties;
 
     private static final Logger logger = Logger.getLogger(WebSecurityConfiguration.class.getName());
 
 
     @Autowired
-    public WebSecurityConfiguration(UserDao userDao, ServerCorsProperties serverCorsProperties, ServerIpProperties serverIpProperties) {
+    public WebSecurityConfiguration(UserDao userDao, ServerCorsProperties serverCorsProperties) {
         this.userDao = userDao;
         this.serverCorsProperties = serverCorsProperties;
-        this.serverIpProperties = serverIpProperties;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        logger.info("Allowed-IP: " + serverIpProperties.getAllowedIp());
-        logger.info("Blocked-IP: " + serverIpProperties.getBlockedIp());
-
         http.csrf().disable();
-
-        for (String ip : serverIpProperties.getAllowedIp()) http.authorizeRequests().anyRequest().hasIpAddress(ip);
-
-        for (String ip : serverIpProperties.getBlockedIp()) http.authorizeRequests().anyRequest().not().hasIpAddress(ip);
 
         http.authorizeRequests()
             .antMatchers("/webjars/**", "/swagger-resources/**", "/v2/api-docs").permitAll()

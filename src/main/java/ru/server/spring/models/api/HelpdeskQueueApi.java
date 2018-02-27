@@ -4,12 +4,12 @@ import lombok.Data;
 import ru.server.spring.models.HelpdeskQueue;
 
 @Data
-public class HelpdeskQueueCount {
+public class HelpdeskQueueApi {
 
     private HelpdeskQueue queue;
     private Integer count;
 
-    public HelpdeskQueueCount(HelpdeskQueue queue, Integer count) {
+    public HelpdeskQueueApi(HelpdeskQueue queue, Integer count) {
         this.queue = queue;
         this.count = count;
     }

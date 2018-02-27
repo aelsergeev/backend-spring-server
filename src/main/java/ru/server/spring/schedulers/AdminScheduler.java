@@ -12,7 +12,7 @@ import ru.server.spring.dao.HelpdeskGroupDao;
 import ru.server.spring.models.HelpdeskQueue;
 import ru.server.spring.models.HelpdeskGroup;
 import ru.server.spring.models.User;
-import ru.server.spring.models.api.HelpdeskQueueCount;
+import ru.server.spring.models.api.HelpdeskQueueApi;
 import ru.server.spring.services.AdminService;
 import ru.server.spring.services.UserService;
 
@@ -64,7 +64,7 @@ public class AdminScheduler {
     @Scheduled(cron = "${schedulers.hd-groups-stat.cron}")
     private void updateGroupHelpDeskCount() {
         if (schedulersConfiguration.getSchedulersProperties().getHdGroupsStat().getEnable()) {
-            List<HelpdeskQueueCount> list = new ArrayList<>();
+            List<HelpdeskQueueApi> list = new ArrayList<>();
 
             List<HelpdeskGroup> helpdeskGroups = helpdeskGroupDao.findAll();
             List<HelpdeskQueue> helpdeskQueues = helpdeskQueueDao.findAll();
@@ -78,7 +78,7 @@ public class AdminScheduler {
 
                     for (HelpdeskQueue helpdeskQueue : helpdeskQueues)
                         if (helpdeskQueue.getId() == hdQueueId)
-                            list.add(new HelpdeskQueueCount(helpdeskQueue, hdQueueCount));
+                            list.add(new HelpdeskQueueApi(helpdeskQueue, hdQueueCount));
                 }
             }
 

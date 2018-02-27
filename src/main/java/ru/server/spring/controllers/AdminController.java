@@ -1,9 +1,13 @@
 package ru.server.spring.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import ru.server.spring.dao.CachedDao;
+import ru.server.spring.models.api.HelpdeskGroupCount;
 import ru.server.spring.models.api.WalletLog;
-import ru.server.spring.schedulers.AdminScheduler;
 import ru.server.spring.services.AdminService;
 
 import java.util.List;
@@ -13,12 +17,12 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
-    private final AdminScheduler adminScheduler;
+    private final CachedDao cachedDao;
 
     @Autowired
-    public AdminController(AdminService adminService, AdminScheduler adminScheduler) {
+    public AdminController(AdminService adminService, CachedDao cachedDao) {
         this.adminService = adminService;
-        this.adminScheduler = adminScheduler;
+        this.cachedDao = cachedDao;
     }
 
     @PostMapping("/item/activate")
@@ -32,15 +36,8 @@ public class AdminController {
     }
 
     @PostMapping("/hd/group/count")
-    public String hdGroupCount(@RequestParam String group) {
-        switch (group) {
-            case "moder":
-                return adminScheduler.getModerGroupHelpDeskCount();
-            case "domofond":
-                return adminScheduler.getDomofondGroupHelpDeskCount();
-            default:
-                return "this group does not exist";
-        }
+    public List<HelpdeskGroupCount> hdGroupCount() {
+        return cachedDao.getGroupHelpDeskCount();
     }
 
 }

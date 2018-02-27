@@ -6,11 +6,11 @@ import ru.server.spring.models.HelpdeskGroup;
 @Data
 public class HelpdeskGroupCount {
 
-    private HelpdeskGroup hd;
+    private HelpdeskGroup queue;
     private Integer count;
 
-    public HelpdeskGroupCount(HelpdeskGroup hd, Integer count) {
-        this.hd = hd;
+    public HelpdeskGroupCount(HelpdeskGroup queue, Integer count) {
+        this.queue = queue;
         this.count = count;
     }
 

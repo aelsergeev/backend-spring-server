@@ -1,4 +1,4 @@
-package ru.server.spring.configs.security;
+package ru.server.spring.services;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,12 +39,14 @@ public class SessionService {
     // TODO rewrite request
     private void killExpiredSessionForSure(String id) {
         try {
-            HttpHeaders requestHeaders = new HttpHeaders();
-            requestHeaders.add("Cookie", "JSESSIONID=" + id);
-            HttpEntity requestEntity = new HttpEntity(null, requestHeaders);
-            RestTemplate rt = new RestTemplate();
-            rt.exchange("http://localhost:8080", HttpMethod.GET, requestEntity, String.class);
-        } catch (Exception ex) {}
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add("Cookie", "JSESSIONID=" + id);
+
+            HttpEntity requestEntity = new HttpEntity(null, httpHeaders);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.exchange("http://localhost:8080", HttpMethod.GET, requestEntity, String.class);
+        } catch (Exception ignored) {}
     }
 
 }

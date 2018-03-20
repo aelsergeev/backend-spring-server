@@ -8,6 +8,5 @@ import java.util.UUID;
 
 public interface JsonTableDao extends CrudRepository<JsonTable, UUID> {
     List<JsonTable> findAll();
-    JsonTable findOne(UUID uuid);
     List<JsonTable> findAllByName(String name);
 }

@@ -3,9 +3,9 @@ package ru.server.spring.configs;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import ru.server.spring.configs.properties.ServerCorsProperties;
 import ru.server.spring.configs.properties.WebSocketProperties;
 
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 @Configuration
 @EnableWebSocketMessageBroker
 @EnableConfigurationProperties(WebSocketProperties.class)
-public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
     private String[] origins = {"*"};
     private final WebSocketProperties webSocketProperties;

@@ -1,12 +1,12 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'org.springframework.boot' version '1.5.10.RELEASE'
+    id 'org.springframework.boot' version '2.0.0.RELEASE'
+    id "io.spring.dependency-management" version "1.0.4.RELEASE"
     id 'at.comm_unity.gradle.plugins.jpamodelgen' version '1.1.4'
     id "io.franzbecker.gradle-lombok" version "1.11"
     id "org.hibernate.gradle.tools" version "1.2.5"
 }
-
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -19,6 +19,7 @@ repositories {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-tomcat'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-websocket'
     compile 'org.springframework.boot:spring-boot-starter-security'
@@ -27,35 +28,38 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-configuration-processor'
     compile 'org.springframework.boot:spring-boot-devtools'
 
-    compile 'org.springframework.security.oauth:spring-security-oauth2:2.2.1.RELEASE'
-    compile 'io.jsonwebtoken:jjwt:0.6.0'
-
     compile 'io.springfox:springfox-swagger2:2.8.0'
     compile 'io.springfox:springfox-swagger-ui:2.8.0'
 
     compile 'org.hibernate:hibernate-core:5.2.12.Final'
     compile 'org.hibernate:hibernate-entitymanager:5.2.12.Final'
 
-    runtime 'org.postgresql:postgresql'
-
+    compile 'javax.interceptor:javax.interceptor-api:1.2.2'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.google.http-client:google-http-client:1.23.0'
     compile 'org.jsoup:jsoup:1.10.3'
 
+    compile 'org.webjars:webjars-locator:0.33'
+    compile 'org.webjars:sockjs-client:1.0.2'
+    compile 'org.webjars:stomp-websocket:2.3.3'
+    compile 'org.webjars:bootstrap:3.3.7'
+    compile 'org.webjars:jquery:3.1.0'
+
+    runtime 'org.postgresql:postgresql'
+    runtime 'org.springframework.boot:spring-boot-properties-migrator'
+
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 	testCompile 'junit:junit:4.12'
-
-    compile("org.webjars:webjars-locator")
-    compile("org.webjars:sockjs-client:1.0.2")
-    compile("org.webjars:stomp-websocket:2.3.3")
-    compile("org.webjars:bootstrap:3.3.7")
-    compile("org.webjars:jquery:3.1.0")
 }
 
 compileJava.dependsOn(processResources)
 
-springBoot {
-	executable = true
+jar {
+    enabled = true
+}
+
+bootJar {
+    classifier = 'boot'
 }
 
 sourceSets {

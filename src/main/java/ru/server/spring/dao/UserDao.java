@@ -141,8 +141,4 @@ public class UserDao {
         entityManager.remove(entityManager.merge(user));
     }
 
-    public void uuidToAll() {
-
-    }
-
 }

@@ -1,10 +1,7 @@
 package ru.server.spring.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.server.spring.dao.CachedDao;
 import ru.server.spring.models.api.HelpdeskQueueApi;
 import ru.server.spring.models.api.WalletLog;
@@ -38,6 +35,11 @@ public class AdminController {
     @PostMapping("/hd/group/count")
     public List<HelpdeskQueueApi> hdGroupCount() {
         return cachedDao.getGroupHelpDeskCount();
+    }
+
+    @GetMapping("/test")
+    public String string() {
+        return "ПРивет Юра";
     }
 
 }

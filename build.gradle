@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'idea'
+    id "com.palantir.docker" version "0.19.2"
+    id 'com.palantir.docker-run' version '0.19.2'
     id 'org.springframework.boot' version '2.0.0.RELEASE'
     id "io.spring.dependency-management" version "1.0.4.RELEASE"
     id 'at.comm_unity.gradle.plugins.jpamodelgen' version '1.1.4'
@@ -52,14 +54,14 @@ dependencies {
 	testCompile 'junit:junit:4.12'
 }
 
-compileJava.dependsOn(processResources)
-
-jar {
-    enabled = true
-}
-
 bootJar {
     classifier = 'boot'
+}
+
+docker {
+    name bootJar.baseName
+    files bootJar.archivePath
+    buildArgs(['JAR_FILE': bootJar.archiveName])
 }
 
 sourceSets {

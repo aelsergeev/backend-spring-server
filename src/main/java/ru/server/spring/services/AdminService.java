@@ -164,7 +164,7 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
 
         Set<String> transactions = new HashSet<>();
         for (Element row : rows) {
-            Element tmp = row.select("td").get(5);
+            Element tmp = row.select("td").get(6);
             if (tmp.hasText()) transactions.add(tmp.text());
         }
 
@@ -198,7 +198,7 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
         Elements rows = table.select("tr");
 
         for (Element row : rows) {
-            userIds.add(Integer.parseInt(row.select("td").get(3).text()));
+            userIds.add(Integer.parseInt(row.select("td").get(4).text()));
         }
 
         return userIds;

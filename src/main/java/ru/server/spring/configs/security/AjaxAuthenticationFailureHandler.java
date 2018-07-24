@@ -11,10 +11,14 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        if ("true".equals(request.getHeader("X-Ajax-call"))) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication with ajax is failure");
+        if ("true".equals(request.getHeader("X-Ajax-Request"))) {
+            response.setStatus(401);
+            response.setContentType("application/json");
+            response.getWriter().print("{ \"message\": \"Bad credentials with Ajax\" }");
         } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failure");
+            response.setStatus(401);
+            response.setContentType("application/json");
+            response.getWriter().print("{ \"message\": \"Bad credentials\" }");
         }
     }
 

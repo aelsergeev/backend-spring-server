@@ -37,9 +37,4 @@ public class AdminController {
         return cachedDao.getGroupHelpDeskCount();
     }
 
-    @GetMapping("/test")
-    public String string() {
-        return "ПРивет Юра";
-    }
-
 }

@@ -18,8 +18,8 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        if ("true".equals(request.getHeader("X-Ajax-call"))) {
-            response.getWriter().print("Authentication with ajax is successful");
+        if ("true".equals(request.getHeader("X-Ajax-Request"))) {
+            response.getWriter().print("Authentication successful with Ajax");
             response.getWriter().flush();
         } else {
             defaultHandler.onAuthenticationSuccess(request, response, authentication);

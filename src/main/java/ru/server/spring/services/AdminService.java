@@ -1,6 +1,5 @@
 package ru.server.spring.services;
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -35,8 +34,6 @@ public interface AdminService {
     JsonArray getGroupFilterHelpdeskCount(int id);
 }
 
-
-@Service
 class AdminAuthorizationServiceImpl {
 
     private static final Logger logger = Logger.getLogger(AdminService.class.getName());
@@ -60,7 +57,7 @@ class AdminAuthorizationServiceImpl {
     }
 
     private boolean isAuthorised() {
-        return cookiesAdmin.containsKey("adm_authkey") && !cookiesAdmin.get("adm_authkey").equals("deleted");
+        return cookiesAdmin.containsKey("adm_authkey") && !cookiesAdmin.get("adm_authkey").equals("");
     }
 
     @PostConstruct
@@ -123,10 +120,21 @@ class AdminAuthorizationServiceImpl {
 @Service
 class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminService {
 
-    private final int transactionsSearchDays = 60;
-
     private AdminServiceImpl(AdminConfiguration adminConfiguration) {
         super(adminConfiguration);
+    }
+
+    private Map<String, String> getRequestDate() {
+        int transactionsSearchDays = 60;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy+HH:mm").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
+        Instant instant = Instant.now();
+
+        Map<String, String> dates = new HashMap<>();
+        dates.put("firstDay", formatter.format(instant.minus(Duration.ofDays(transactionsSearchDays))));
+        dates.put("secondDay", formatter.format(instant));
+
+        return dates;
     }
 
     public Document getModerationStatistics() {
@@ -148,11 +156,10 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
     }
 
     public List<WalletLog> getTransactionsFromWalletLogByUserId(int userId){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy+HH:mm").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
-        Instant instant = Instant.now();
+        Map<String, String> dates = getRequestDate();
 
-        String firstDay = formatter.format(instant.minus(Duration.ofDays(transactionsSearchDays)));
-        String secondDay = formatter.format(instant);
+        String firstDay = dates.get("firstDay");
+        String secondDay = dates.get("secondDay");
 
         String url = "/billing/walletlog?date=" + firstDay + "+-+" + secondDay + "&userIds=" + userId;
 
@@ -182,11 +189,10 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
     }
 
     public Set<Integer> getUsersFromWalletLogByTransaction(String transactionId) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy+HH:mm").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
-        Instant instant = Instant.now();
+        Map<String, String> dates = getRequestDate();
 
-        String firstDay = formatter.format(instant.minus(Duration.ofDays(transactionsSearchDays)));
-        String secondDay = formatter.format(instant);
+        String firstDay = dates.get("firstDay");
+        String secondDay = dates.get("secondDay");
 
         String url = "/billing/walletlog?date=" + firstDay + "+-+" + secondDay + "&payerCode=" + transactionId;
 

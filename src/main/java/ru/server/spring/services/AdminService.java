@@ -1,9 +1,6 @@
 package ru.server.spring.services;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,7 +28,7 @@ public interface AdminService {
     JsonObject getProblemTickets(int ticketLimit, String startReactionTime, String endReactionTime);
     JsonObject getTicket(int id);
     JsonArray getUserAdminList();
-    JsonArray getGroupFilterHelpdeskCount(int id);
+    JsonObject getGroupFilterHelpdeskCount(int id);
 }
 
 class AdminAuthorizationServiceImpl {
@@ -66,7 +63,7 @@ class AdminAuthorizationServiceImpl {
             Connection.Response authorization = Jsoup.connect(domain + "/login")
                     .method(Connection.Method.POST)
                     .userAgent(userAgent)
-                    .header("Referer", domain + "/login?next=%2F")
+                    .header("Referer", domain)
                     .data("username", username, "password", password)
                     .followRedirects(false)
                     .execute();
@@ -82,7 +79,13 @@ class AdminAuthorizationServiceImpl {
 
     private Connection.Response sendRequest(Connection connection) {
         try {
-            Connection.Response response = connection.userAgent(userAgent).cookies(cookiesAdmin).followRedirects(false).execute();
+            Connection.Response response = connection
+                    .userAgent(userAgent)
+                    .cookies(cookiesAdmin)
+                    .header("Referer", domain)
+                    .followRedirects(false)
+                    .execute();
+
             setCookiesAdmin(response.cookies());
 
             if (isAuthorised()) return response;
@@ -109,8 +112,13 @@ class AdminAuthorizationServiceImpl {
         }
     }
 
-    JsonElement getJson(String url) {
+    JsonElement getJsonGet(String url) {
         Connection connection = Jsoup.connect(domain + url).ignoreContentType(true);
+        return new JsonParser().parse(sendRequest(connection).body());
+    }
+
+    JsonElement getJsonPost(String url, String body, Map<String, String> headers) {
+        Connection connection = Jsoup.connect(domain + url).ignoreContentType(true).method(Connection.Method.POST).headers(headers).requestBody(body);
         return new JsonParser().parse(sendRequest(connection).body());
     }
 
@@ -224,22 +232,32 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
                 "&sortType=desc" +
                 "&limit=" + ticketLimit;
 
-        return getJson(url).getAsJsonObject();
+        return getJsonGet(url).getAsJsonObject();
     }
 
     public JsonObject getTicket(int id) {
         String url = "/helpdesk/api/1/ticket/" + id;
-        return getJson(url).getAsJsonObject();
+        return getJsonGet(url).getAsJsonObject();
     }
 
     public JsonArray getUserAdminList() {
         String url = "/helpdesk/api/1/user/admin/list";
-        return getJson(url).getAsJsonArray();
+        return getJsonGet(url).getAsJsonArray();
     }
 
-    public JsonArray getGroupFilterHelpdeskCount(int id) {
-        String url = "/helpdesk/api/1/filter/group/" + id + "/count";
-        return getJson(url).getAsJsonArray();
+    public JsonObject getGroupFilterHelpdeskCount(int id) {
+        String url = "/helpdesk/api/1/proxy?method=filter/group/counts";
+
+        Map<String, String> data = new HashMap<>();
+        data.put("id", String.valueOf(id));
+        data.put("method", "filter/group/counts");
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("content-type", "application/json");
+
+        String body = new Gson().toJson(data);
+
+        return getJsonPost(url, body, headers).getAsJsonObject();
     }
 
 }

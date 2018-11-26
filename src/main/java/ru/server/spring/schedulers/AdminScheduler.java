@@ -2,6 +2,7 @@ package ru.server.spring.schedulers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -70,7 +71,8 @@ public class AdminScheduler {
             List<HelpdeskQueue> helpdeskQueues = helpdeskQueueDao.findAll();
 
             for (HelpdeskGroup helpdeskGroup : helpdeskGroups) {
-                JsonArray hdQueues = adminService.getGroupFilterHelpdeskCount(helpdeskGroup.getId());
+                JsonObject response = adminService.getGroupFilterHelpdeskCount(helpdeskGroup.getId());
+                JsonArray hdQueues = response.getAsJsonArray("result");
 
                 for (JsonElement hdQueue : hdQueues) {
                     int hdQueueId = hdQueue.getAsJsonObject().get("id").getAsInt();

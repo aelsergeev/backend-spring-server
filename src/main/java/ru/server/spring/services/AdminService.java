@@ -152,14 +152,14 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
     public String activateItem(int id) {
         Document document = getDocument("/items/item/info/" + id);
 
-        Element element = document.select(".form-group:contains(Статус)").first();
+        Element element = document.select(".form-group label:contains(Статус)").first().parent();
         String status = element.select(".form-control-static span").first().text();
 
         if (status.contains("Reject")) {
             getResponse("/items/item/activate/" + id);
             return "Item activated";
         } else {
-            return "Invalid item status";
+            return "Invalid item status: " + status;
         }
     }
 

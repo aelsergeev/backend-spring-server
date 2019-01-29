@@ -117,7 +117,10 @@ class AdminAuthorizationServiceImpl {
         return new JsonParser().parse(sendRequest(connection).body());
     }
 
-    JsonElement getJsonPost(String url, String body, Map<String, String> headers) {
+    JsonElement getJsonPost(String url, String body) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("content-type", "application/json");
+
         Connection connection = Jsoup.connect(domain + url).ignoreContentType(true).method(Connection.Method.POST).headers(headers).requestBody(body);
         return new JsonParser().parse(sendRequest(connection).body());
     }
@@ -219,20 +222,27 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
     }
 
     public JsonObject getProblemTickets(int ticketLimit, String startReactionTime, String endReactionTime) {
-        String url = "/helpdesk/api/1/ticket/search" +
-                "?p=1" +
-                "&typeId=3" +
-                "&reactionTxtime[start]=" + startReactionTime +
-                "&reactionTxtime[end]=" + endReactionTime +
-                "&statusId[]=2" +
-                "&statusId[]=3" +
-                "&statusId[]=4" +
-                "&statusId[]=5" +
-                "&sortField=reactionTxtime" +
-                "&sortType=desc" +
-                "&limit=" + ticketLimit;
+        String url = "/helpdesk/api/1/proxy?method=ticket/search";
 
-        return getJsonGet(url).getAsJsonObject();
+        int[] statusId = { 2, 3, 4, 5 };
+        int[] typeId = { 3 };
+
+        Map<String, String> reactionTxtime = new HashMap<>();
+        reactionTxtime.put("start", startReactionTime);
+        reactionTxtime.put("end", endReactionTime);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("method", "ticket/search");
+        data.put("sortType", "desc");
+        data.put("sortField", "reactionTxtime");
+        data.put("statusId", statusId);
+        data.put("typeId", typeId);
+        data.put("limit", ticketLimit);
+        data.put("reactionTxtime", reactionTxtime);
+
+        String body = new Gson().toJson(data);
+
+        return getJsonPost(url, body).getAsJsonObject();
     }
 
     public JsonObject getTicket(int id) {
@@ -241,8 +251,14 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
     }
 
     public JsonArray getUserAdminList() {
-        String url = "/helpdesk/api/1/user/admin/list";
-        return getJsonGet(url).getAsJsonArray();
+        String url = "/helpdesk/api/1/proxy?method=user/admin/list";
+
+        Map<String, String> data = new HashMap<>();
+        data.put("method", "user/admin/list");
+
+        String body = new Gson().toJson(data);
+
+        return getJsonPost(url, body).getAsJsonObject().getAsJsonArray("result");
     }
 
     public JsonObject getGroupFilterHelpdeskCount(int id) {
@@ -252,12 +268,9 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
         data.put("id", String.valueOf(id));
         data.put("method", "filter/group/counts");
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("content-type", "application/json");
-
         String body = new Gson().toJson(data);
 
-        return getJsonPost(url, body, headers).getAsJsonObject();
+        return getJsonPost(url, body).getAsJsonObject();
     }
 
 }

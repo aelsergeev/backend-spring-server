@@ -47,7 +47,7 @@ public class TaskLogScheduler {
             String today = today();
 
             JsonObject response = adminService.getProblemTickets(100, today, today);
-            JsonArray tickets = response.getAsJsonArray("tickets");
+            JsonArray tickets = response.getAsJsonObject("result").getAsJsonArray("tickets");
 
             for (JsonElement ticket : tickets) {
                 Instant reactionTxtime = parseReactionTime(ticket.getAsJsonObject().get("reactionTxtime").getAsString());
@@ -92,7 +92,7 @@ public class TaskLogScheduler {
     }
 
     private void setLastReactionTime(JsonObject jsonObject) {
-        JsonArray tickets = jsonObject.getAsJsonArray("tickets");
+        JsonArray tickets = jsonObject.getAsJsonObject("result").getAsJsonArray("tickets");
 
         if (tickets.size() == 0 && this.lastReactionTime == null)
             this.lastReactionTime = Instant.now();

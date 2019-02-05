@@ -136,7 +136,7 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
     }
 
     private Map<String, String> getRequestDate() {
-        int transactionsSearchDays = 60;
+        int transactionsSearchDays = 90;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy+HH:mm").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
         Instant instant = Instant.now();

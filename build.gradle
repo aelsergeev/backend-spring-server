@@ -3,10 +3,10 @@ plugins {
     id 'idea'
     id "com.palantir.docker" version "0.19.2"
     id 'com.palantir.docker-run' version '0.19.2'
-    id 'org.springframework.boot' version '2.0.3.RELEASE'
-    id "io.spring.dependency-management" version "1.0.4.RELEASE"
+    id 'org.springframework.boot' version '2.1.2.RELEASE'
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id 'at.comm_unity.gradle.plugins.jpamodelgen' version '1.1.4'
-    id "io.franzbecker.gradle-lombok" version "1.11"
+    id "io.franzbecker.gradle-lombok" version "2.0"
     id "org.hibernate.gradle.tools" version "1.2.5"
 }
 

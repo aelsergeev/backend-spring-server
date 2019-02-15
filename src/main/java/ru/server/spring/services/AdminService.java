@@ -246,8 +246,15 @@ class AdminServiceImpl extends AdminAuthorizationServiceImpl implements AdminSer
     }
 
     public JsonObject getTicket(int id) {
-        String url = "/helpdesk/api/1/ticket/" + id;
-        return getJsonGet(url).getAsJsonObject();
+        String url = "/helpdesk/api/1/proxy?method=ticket/admin_get";
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("method", "ticket/admin_get");
+        data.put("ticketId", id);
+
+        String body = new Gson().toJson(data);
+
+        return getJsonPost(url, body).getAsJsonObject().getAsJsonObject("result");
     }
 
     public JsonArray getUserAdminList() {

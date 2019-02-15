@@ -12,6 +12,7 @@ import ru.server.spring.models.api.NotificationApi;
 import ru.server.spring.services.AdminService;
 import ru.server.spring.services.NotificationService;
 
+import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

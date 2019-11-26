@@ -1,0 +1,80 @@
+server:
+  address: 127.0.0.1
+  port: 8080
+  compression:
+    enabled: true
+    mime-types:
+      - application/json
+      - text/html
+      - application/xml
+      - application/javascript
+      - text/html
+      - text/xml
+      - text/plain
+      - text/css
+  cors:
+    allowed-origins:
+      - http://localhost:63342
+      - http://localhost:80
+  use-forward-headers: true
+  tomcat:
+    accesslog:
+      enabled: true
+      buffered: true
+      directory: /var/log/tomcat
+
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/test
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+  security:
+    user:
+      name: admin
+      password: test
+      roles: ADMIN
+
+management:
+  endpoints:
+    enabled-by-default: false
+
+image:
+  location:
+    employee: /home/aelsergeev/Pictures/spring-images
+
+admin:
+  domain: https://adm.server.ru
+  username: test
+  password: test
+  user-agent: Google Chrome extension Admin.Helper
+
+websocket:
+  cors: false
+  destination-prefixes: /app
+  endpoint: /ws
+
+schedulers:
+  clear-mod-stat:
+    enable: false
+    cron: 0 0 0 * * *
+  stat-category:
+    enable: false
+    cron: 0 0/5 * * * *
+  task-log:
+    enable: true
+    cron: "*/10 * * * * *"
+  admin-user-id:
+    enable: false
+    cron: 1 * * * * *
+  hd-groups-stat:
+    enable: true
+    cron: 1 * * * * *
